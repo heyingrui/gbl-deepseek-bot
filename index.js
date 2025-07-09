@@ -1,48 +1,40 @@
-const fetch = require('node-fetch');
-const express = require('express');
-const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
-const dotenv = require('dotenv');
+const express = require("express");
+const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+const fetch = require("node-fetch"); // ✅ 修复 fetch 报错
+
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/webhook', async (req, res) => {
+app.post("/webhook", async (req, res) => {
+  const queryText = req.body.queryResult?.queryText || "";
+
+  console.log("🤖 Received queryText:", queryText);
+
   try {
-    const queryText = req.body.queryResult?.queryText || '你好';
-    const prompt = `用户: ${queryText}\nAI:`;
+    // 示例：调用外部API（可根据你实际用途修改）
+    // const response = await fetch("https://api.example.com/answer?q=" + encodeURIComponent(queryText));
+    // const data = await response.json();
+    // const reply = data.answer || "暂时无法获取答案。";
 
-    const response = await fetch(process.env.DEEPSEEK_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat', // 替换成你的模型名
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7
-      })
+    // 如果你不使用外部API，可直接返回固定回复：
+    const reply = `你好！你说的是：“${queryText}”`;
+
+    res.json({
+      fulfillmentText: reply,
     });
-
-    if (!response.ok) {
-      throw new Error(`DeepSeek API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const fulfillmentText = data.choices?.[0]?.message?.content || 'AI 无响应，请稍后再试。';
-
-    res.json({ fulfillmentText });
-
   } catch (error) {
-    console.error('Webhook Error:', error.message);
-    res.json({ fulfillmentText: 'AI 无响应，请稍后再试。' });
+    console.error("❌ Webhook Error:", error.message);
+    res.json({
+      fulfillmentText: "AI 无响应，请稍后重试。",
+    });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Webhook server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`✅ Webhook server is running on port ${port}`);
 });
