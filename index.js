@@ -12,9 +12,12 @@ app.use(bodyParser.json());
 
 app.post("/webhook", async (req, res) => {
   const queryText = req.body.queryResult?.queryText || "";
+  const intent = req.body.queryResult?.intent?.displayName || "";
 
+  console.log("🤖 Received intent:", intent);
   console.log("🤖 Received queryText:", queryText);
 
+  let reply = "对不起，我还不太明白你的意思。";
   try {
     // 示例：调用外部API（可根据你实际用途修改）
     // const response = await fetch("https://api.example.com/answer?q=" + encodeURIComponent(queryText));
