@@ -15,18 +15,13 @@ app.post("/webhook", async (req, res) => {
   const intent = req.body.queryResult?.intent?.displayName || "";
 
   console.log("🤖 Received intent:", intent);
-  console.log("🤖 Received queryText:", queryText);
+  console.log("📥 Received queryText:", queryText);
 
   let reply = "对不起，我还不太明白你的意思。";
-  try {
-    // 示例：调用外部API（可根据你实际用途修改）
-    // const response = await fetch("https://api.example.com/answer?q=" + encodeURIComponent(queryText));
-    // const data = await response.json();
-    // const reply = data.answer || "暂时无法获取答案。";
 
-    // 如果你不使用外部API，可直接返回固定回复：
-    const reply = `你好！你说的是：“${queryText}”`;
-        switch (intent) {
+  try {
+    // 根据意图判断返回内容
+    switch (intent) {
       case "ask.help":
         reply = "请问你需要什么帮助？";
         break;
