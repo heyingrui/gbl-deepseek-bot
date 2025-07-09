@@ -23,6 +23,26 @@ app.post("/webhook", async (req, res) => {
 
     // 如果你不使用外部API，可直接返回固定回复：
     const reply = `你好！你说的是：“${queryText}”`;
+        switch (intent) {
+      case "ask.help":
+        reply = "请问你需要什么帮助？";
+        break;
+      case "emotion.low":
+        reply = "我理解你的心情。如果你愿意，我可以陪你聊聊。";
+        break;
+      case "farewell":
+        reply = "再见，祝你有美好的一天！";
+        break;
+      case "request.quiz":
+        reply = "我们现在开始小测验吧。请准备好！";
+        break;
+      case "start.learning":
+        reply = "学习即将开始，加油！";
+        break;
+      default:
+        reply = `你好！你说的是：“${queryText}”`;
+        break;
+    }
 
     res.json({
       fulfillmentText: reply,
