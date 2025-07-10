@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000;
 
 // MongoDB URI from your MongoDB Atlas
 const uri = process.env.MONGODB_URI; // 存储在 .env 文件中
+require("dotenv").config();
+console.log("Mongo URI:", process.env.MONGO_URI); // 运行时应看到完整的 URI
 
 let db;
 
@@ -31,10 +33,9 @@ app.post("/webhook", async (req, res) => {
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
-  // console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
+  console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
   // console.log("🎯 Extracted queryText:", queryText);
   // console.log("🤖 Received queryText:", queryText);
-  // console.log("📌 Intent displayName:", intentName);
 
   try {
     const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
