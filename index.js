@@ -42,11 +42,6 @@ async function callDeepSeek(queryText) {
   } catch (error) {
     console.error("❌ DeepSeek 请求失败：", error.message);
     return "AI 调用出错，请检查网络或 API 配置。";      
-  }catch (error) {
-    console.error("❌ Webhook Error:", error);
-    res.json({
-      fulfillmentText: "AI 无响应，请稍后重试。",
-    });
   }
 });
 
