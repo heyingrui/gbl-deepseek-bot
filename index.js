@@ -29,8 +29,26 @@ app.post("/webhook", async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   
   //const queryText = req.body.queryResult?.queryText || "";
-  const queryText = req.body.queryResult.queryText;
+  const userQuery = req.body.queryResult.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
+
+  const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "deepseek-chat", // 或其他你使用的模型名
+      messages: [
+        { role: "system", content: "你是一个编程教学助手，请用简洁中文回答。" },
+        { role: "user", content: userQuery }
+      ]
+    })
+  });  
+
+  const result = await apiResponse.json();
+  const reply = result.choices?.[0]?.message?.content || "抱歉，我现在无法回答这个问题。";
 
   console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
   console.log("🎯 Extracted queryText:", queryText);
