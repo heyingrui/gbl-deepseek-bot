@@ -41,9 +41,9 @@ async function callDeepSeek(queryText, intentName) {
     });
 
     const data = await apiResponse.json();
-    console.log("📡 DeepSeek API 返回原始数据:", JSON.stringify(data, null, 2));
-    if (data.error?.message) {
-        reply = `请求失败：${data.error.message}`;
+    if (data.error) {
+        console.error("OpenAI API 错误：", data.error.message);
+        reply = `AI 错误：${data.error.message}`;
       } else {
         reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
       }
