@@ -19,6 +19,7 @@ app.post("/webhook", async (req, res) => {
   console.log("🎯 Extracted queryText:", queryText);
   console.log("🤖 Received queryText:", queryText);
   console.log("📌 Intent displayName:", intentName);
+  console.log(typeof fetch); // 应该输出 function
 
   try {
 
