@@ -36,14 +36,15 @@ app.post("/webhook", async (req, res) => {
       reply = `你好，你说的是：“${queryText}”`;
     }
 
-  // ✅ 写入 Firestore
-  await db.collection("interactions").add({
-    sessionId: sessionId,
-    userQuery: queryText,
-    botReply: reply,
-    intent: intentName,
-    timestamp: admin.firestore.FieldValue.serverTimestamp()
-  });
+      // ✅ 写入 Firestore
+      await db.collection("interactions").add({
+      sessionId: sessionId,
+      userQuery: queryText,
+      botReply: reply,
+      intent: intentName,
+      timestamp: admin.firestore.FieldValue.serverTimestamp()
+    });
+    console.log("✅ Firestore 写入成功");
     
     res.json({ fulfillmentText: reply });
   } catch (error) {
