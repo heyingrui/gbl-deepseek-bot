@@ -2,26 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const fetch = require("node-fetch"); // ✅ 修复 fetch 报错
-const { MongoClient } = require("mongodb");
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-// MongoDB URI from your MongoDB Atlas
-const uri = process.env.MONGODB_URI; // 存储在 .env 文件中
-
-let db;
-
-MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((client) => {
-    db = client.db("gbl_database"); // 替换为你的数据库名
-    console.log("✅ Connected to MongoDB Atlas");
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
-  });
 
 app.use(bodyParser.json());
 
@@ -37,13 +22,6 @@ app.post("/webhook", async (req, res) => {
   console.log("📌 Intent displayName:", intentName);
 
   try {
-    if (!db) throw new Error("MongoDB 未连接，稍后重试");
-    // MongoDB 插入日志
-    await db.collection("user_inputs").insertOne({
-      queryText,
-      intentName,
-      timestamp: new Date()
-    });
 
     // 回复逻辑（保留你的原代码）
     let reply = "默认回复。";
