@@ -31,8 +31,6 @@ app.post("/webhook", async (req, res) => {
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
-  const result = await apiResponse.json();
-
   // console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
   // console.log("🎯 Extracted queryText:", queryText);
   // console.log("🤖 Received queryText:", queryText);
@@ -53,9 +51,11 @@ app.post("/webhook", async (req, res) => {
         ]
       })
     });  
-
     
-    if (!db) throw new Error("MongoDB 未连接，稍后重试");
+    const result = await apiResponse.json();
+    const reply = result.choices?.[0]?.message?.content || "抱歉，我现在无法回答这个问题。";
+    
+    if (!db){;
     // MongoDB 插入日志
     await db.collection("user_inputs").insertOne({
       queryText,
@@ -63,26 +63,17 @@ app.post("/webhook", async (req, res) => {
       deepseekReply: reply,
       timestamp: new Date()
     });
-
-    // 回复逻辑（保留你的原代码）
-    let reply = "";
-
-    // 简单条件判断
-    if (queryText.includes("条件语句") || queryText.includes("if")) {
-      reply = "条件语句用于根据不同的条件来执行不同的代码，例如 if、if-else、switch。";
     } else {
-      reply = "对不起，我暂时无法回答这个问题。";
+      console.warn("⚠️ MongoDB 未连接，跳过日志记录。");
     }
-  
+    
+    // Step 3: 返回 AI 回复给 Dialogflow
     res.json({ fulfillmentText: reply });
   } catch (error) {
     console.error("❌ Webhook Error:", error);
     res.json({
       fulfillmentText: "AI 无响应，请稍后重试。",
     });
-  }
-});
-
 
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
