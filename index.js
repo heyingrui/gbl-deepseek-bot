@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-// const fetch = require("node-fetch"); // ✅ 修复 fetch 报错
+// const fetch = require("node-fetch"); // ✅ 修复 fetch 报错, node.js是18以上版本，服务器自动更新，不需要这句代码
 
 dotenv.config();
 
