@@ -1,7 +1,7 @@
 {
   "name": "gbl-deepseek-webhook",
   "version": "1.0.0",
-  "description": "A webhook server for Dialogflow integrated with DeepSeek API",
+  "description": "A webhook server for Dialogflow integrated with ChatGPT API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
