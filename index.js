@@ -54,7 +54,7 @@ app.post("/webhook", async (req, res) => {
   const intentName = req.body.queryResult?.intent?.displayName || "";
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   
-  console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
+  console.log("🌐 DeepSeek 原始返回：", JSON.stringify(data, null, 2));
   console.log("🎯 Extracted queryText:", queryText);
   console.log("🤖 Received queryText:", queryText);
   console.log("📌 Intent displayName:", intentName);
