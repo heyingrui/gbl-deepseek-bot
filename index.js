@@ -46,16 +46,13 @@ app.post("/webhook", async (req, res) => {
     });
 
     // 回复逻辑（保留你的原代码）
-    let reply = "默认回复。";
+    const action = req.body.queryResult.action;
+    let responseText = "暂时没有答案。";
 
     // 判断 intent
-    if (intentName === "start.learning") {
-      reply = "学习即将开始，加油！";
-    } else if (intentName === "ask.help") {
-      reply = "请问你需要什么帮助？";
-    } else {
-      reply = `你好，你说的是：“${queryText}”`;
-    }
+    if (action === "get_conditional_statement") {
+      reply = "条件语句用于根据不同的条件决定执行哪部分代码...";
+    } 
   
     res.json({ fulfillmentText: reply });
   } catch (error) {
