@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const fetch = require("node-fetch");
+fetch = require("node-fetch");
 
 async function callDeepSeek(queryText, intentName) {
   try{
