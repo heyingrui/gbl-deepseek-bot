@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const fetch = require("node-fetch");
 
-async function callDeepSeek(queryText) {
+async function callDeepSeek(queryText, intentName) {
   try{
     // 回复逻辑（保留你的原代码）
     let reply = "默认回复。";
@@ -37,14 +37,13 @@ async function callDeepSeek(queryText) {
     });
 
     const data = await apiResponse.json();
-    const reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
+    reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
     return reply;
 
   } catch (error) {
     console.error("❌ DeepSeek 请求失败：", error.message);
     return "AI 调用出错，请检查网络或 API 配置。";      
   }
-});
 
 app.use(bodyParser.json());
 
@@ -58,8 +57,10 @@ app.post("/webhook", async (req, res) => {
   console.log("🤖 Received queryText:", queryText);
   console.log("📌 Intent displayName:", intentName);
   console.log(typeof fetch); // 应该输出 function
-  const reply = await callDeepSeek(queryText);
+  const reply = await callDeepSeek(queryText, intentName);
   console.log("✅ AI 回复：", reply);
+
+  res.json({fulfillmentText: reply,});
     }
   
 app.listen(port, () => {
