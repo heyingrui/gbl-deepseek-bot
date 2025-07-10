@@ -47,7 +47,7 @@ app.post("/webhook", async (req, res) => {
         model: "deepseek-chat", // 或其他你使用的模型名
         messages: [
           { role: "system", content: "你是一个编程教学助手，请用简洁中文回答。" },
-          { role: "user", content: userQuery }
+          { role: "user", content: queryText }
         ]
       })
     });  
@@ -55,7 +55,7 @@ app.post("/webhook", async (req, res) => {
     const result = await apiResponse.json();
     const reply = result.choices?.[0]?.message?.content || "抱歉，我现在无法回答这个问题。";
     
-    if (!db){;
+    if (db){;
     // MongoDB 插入日志
     await db.collection("user_inputs").insertOne({
       queryText,
@@ -74,7 +74,8 @@ app.post("/webhook", async (req, res) => {
     res.json({
       fulfillmentText: "AI 无响应，请稍后重试。",
     });
-
+  }
+});
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
 });
