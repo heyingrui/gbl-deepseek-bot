@@ -32,7 +32,7 @@ async function callDeepSeek(queryText, intentName) {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: "你是一个编程助教，擅长解释编程知识，语言简洁。" },
           { role: "user", content: queryText }
