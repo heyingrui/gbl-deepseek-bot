@@ -15,6 +15,8 @@ admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
 });
 
+const db = admin.firestore();
+
 app.use(bodyParser.json());
 
 app.post("/webhook", async (req, res) => {
