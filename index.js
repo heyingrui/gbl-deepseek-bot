@@ -38,6 +38,7 @@ async function callDeepSeek(queryText, intentName) {
 
     const data = await apiResponse.json();
     reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
+    }
     return reply;
 
   } catch (error) {
@@ -62,8 +63,7 @@ app.post("/webhook", async (req, res) => {
   console.log("✅ AI 回复：", reply);
 
   res.json({fulfillmentText: reply,});
-    }      
-} 
+);
          
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
