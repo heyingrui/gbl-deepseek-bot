@@ -28,7 +28,8 @@ app.use(bodyParser.json());
 app.post("/webhook", async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   
-  const queryText = req.body.queryResult?.queryText || "";
+  //const queryText = req.body.queryResult?.queryText || "";
+  const queryText = req.body.queryResult.queryText;
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
   console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
@@ -46,13 +47,14 @@ app.post("/webhook", async (req, res) => {
     });
 
     // 回复逻辑（保留你的原代码）
-    const action = req.body.queryResult.action;
-    let responseText = "暂时没有答案。";
+    let reply = "";
 
-    // 判断 intent
-    if (action === "get_conditional_statement") {
-      reply = "条件语句用于根据不同的条件决定执行哪部分代码...";
-    } 
+    // 简单条件判断
+    if (queryText.includes("条件语句") || queryText.includes("if")) {
+      reply = "条件语句用于根据不同的条件来执行不同的代码，例如 if、if-else、switch。";
+    } else {
+      reply = "对不起，我暂时无法回答这个问题。";
+    }
   
     res.json({ fulfillmentText: reply });
   } catch (error) {
