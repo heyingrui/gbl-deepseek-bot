@@ -10,6 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 async function callDeepSeek(queryText, intentName) {
+  let reply = "默认回复。"; // ✅ 全局初始化 reply
   try{
      // 判断 intent
     if (intentName === "start.learning") {
@@ -35,7 +36,7 @@ async function callDeepSeek(queryText, intentName) {
     });
 
     const data = await apiResponse.json();
-    const reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
+    reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
     }
   } catch (error) {
     console.error("❌ DeepSeek 请求失败：", error.message);
