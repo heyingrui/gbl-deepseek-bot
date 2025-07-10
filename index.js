@@ -1,3 +1,4 @@
+res.setHeader('Content-Type', 'application/json; charset=utf-8');
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
