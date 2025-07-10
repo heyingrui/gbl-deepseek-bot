@@ -2,8 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const fetch = require("node-fetch"); // ✅ 修复 fetch 报错
-const admin = require("firebase-admin");
-const serviceAccount = require("./firebase-service-account.json"); 
+const admin = require("firbase-admin");
+const serviceAccount = require("./firbase-service-account.json"); 
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
