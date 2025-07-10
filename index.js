@@ -1,21 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const admin = require("firebase-admin");
 const fetch = require("node-fetch"); // ✅ 修复 fetch 报错
+const admin = require("firebase-admin");
 const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
-
-dotenv.config();
-
-const app = express();
-const port = process.env.PORT || 3000;
-const db = admin.firestore();
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
 });
 
 const db = admin.firestore();
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -40,13 +39,12 @@ app.post("/webhook", async (req, res) => {
     }
 
       // ✅ 写入 Firestore
-      await db.collection("interactions").add({
-      sessionId: sessionId,
-      userQuery: queryText,
-      botReply: reply,
-      intent: intentName,
-      timestamp: admin.firestore.FieldValue.serverTimestamp()
+      await db.collection("chat_logs").add({
+      queryText,
+      intentName,
+      timestamp: new Date(),
     });
+    
     console.log("✅ Firestore 写入成功");
     
     res.json({ fulfillmentText: reply });
