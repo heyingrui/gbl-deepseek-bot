@@ -25,14 +25,14 @@ async function callDeepSeek(queryText, intentName) {
     } else {
       // reply = `你好，你说的是：“${queryText}”`;
       //请求DeepSeek API 获取回复
-      const apiResponse = await fetch("https://api.deepseek.com/chat/completions", {
+      const apiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "gpt-4",
         messages: [
           { role: "system", content: "你是一个编程助教，擅长解释编程知识，语言简洁。" },
           { role: "user", content: queryText }
@@ -49,7 +49,7 @@ async function callDeepSeek(queryText, intentName) {
       }
     }
   } catch (error) {
-    console.error("❌ DeepSeek 请求失败：", error.message);
+    console.error("❌ ChatGPT 请求失败：", error.message);
     return "AI 调用出错，请检查网络或 API 配置。";      
   }
   return reply;
