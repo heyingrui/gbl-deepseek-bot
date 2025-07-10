@@ -22,6 +22,7 @@ app.post("/webhook", async (req, res) => {
 
   console.log("🤖 Received queryText:", queryText);
   console.log("📌 Intent displayName:", intentName);
+  console.log("🛠 正在尝试写入 Firestore 数据...");
 
   try {
     let reply = "默认回复。";
