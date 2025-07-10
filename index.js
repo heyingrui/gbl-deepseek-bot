@@ -37,12 +37,11 @@ async function callDeepSeek(queryText, intentName) {
     const data = await apiResponse.json();
     const reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
     }
-    return reply;
-
   } catch (error) {
     console.error("❌ DeepSeek 请求失败：", error.message);
     return "AI 调用出错，请检查网络或 API 配置。";      
   }
+  return reply;
 }
 
 app.use(bodyParser.json());
