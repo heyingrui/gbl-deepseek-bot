@@ -49,6 +49,7 @@ app.post("/webhook", async (req, res) => {
     res.json({ fulfillmentText: reply });
   } catch (error) {
     console.error("❌ Webhook Error:", error);
+    console.error("❌ Firestore 写入失败:", error);
     res.json({
       fulfillmentText: "AI 无响应，请稍后重试。",
     });
