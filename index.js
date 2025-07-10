@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 // const fetch = require("node-fetch"); // ✅ 修复 fetch 报错, node.js是18以上版本，服务器自动更新，不需要这句代码
 
 if (!process.env.OPENAI_API_KEY) {
-  console.error("❗ 环境变量 DEEPSEEK_API_KEY 未定义，请检查 .env 文件。");
+  console.error("❗ 环境变量 OPENAI_API_KEY 未定义，请检查 .env 文件。");
   process.exit(1);
 }
 
