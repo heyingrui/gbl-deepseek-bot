@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "body-parser": "^2.2.0",
+    "firebase-admin": "^11.10.1",
     "dotenv": "^17.1.0",
     "express": "^5.1.0",
     "node-fetch": "^3.3.2"
