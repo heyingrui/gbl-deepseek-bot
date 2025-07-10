@@ -54,8 +54,7 @@ app.post("/webhook", async (req, res) => {
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
   
-  console.log("🎯 Extracted queryText:", queryText);
-  console.log("🤖 Received queryText:", queryText);
+  console.log("🎯 queryText:", queryText);
   console.log("📌 Intent displayName:", intentName);
   console.log(typeof fetch); // 应该输出 function
   const reply = await callDeepSeek(queryText, intentName);
