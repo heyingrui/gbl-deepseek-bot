@@ -44,6 +44,7 @@ async function callDeepSeek(queryText, intentName) {
     console.error("❌ DeepSeek 请求失败：", error.message);
     return "AI 调用出错，请检查网络或 API 配置。";      
   }
+}
 
 app.use(bodyParser.json());
 
@@ -61,8 +62,9 @@ app.post("/webhook", async (req, res) => {
   console.log("✅ AI 回复：", reply);
 
   res.json({fulfillmentText: reply,});
-    }
-  
+    }      
+} 
+         
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
 });
