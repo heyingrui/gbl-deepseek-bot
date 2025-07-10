@@ -63,7 +63,7 @@ app.post("/webhook", async (req, res) => {
   console.log("✅ AI 回复：", reply);
 
   res.json({fulfillmentText: reply,});
-);
+});
          
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
