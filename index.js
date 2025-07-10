@@ -11,8 +11,6 @@ const port = process.env.PORT || 3000;
 
 // MongoDB URI from your MongoDB Atlas
 const uri = process.env.MONGODB_URI; // 存储在 .env 文件中
-require("dotenv").config();
-console.log("Mongo URI:", process.env.MONGO_URI); // 运行时应看到完整的 URI
 
 let db;
 
@@ -29,46 +27,36 @@ app.use(bodyParser.json());
 
 app.post("/webhook", async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-
+  
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
   console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
   console.log("🎯 Extracted queryText:", queryText);
   console.log("🤖 Received queryText:", queryText);
+  console.log("📌 Intent displayName:", intentName);
 
   try {
-    const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "deepseek-chat", // 或其他你使用的模型名
-        messages: [
-          { role: "system", content: "你是一个编程教学助手，请用简洁中文回答。" },
-          { role: "user", content: queryText }
-        ]
-      })
-    });  
-    
-    const result = await apiResponse.json();
-    const reply = result.choices?.[0]?.message?.content || "抱歉，我现在无法回答这个问题。";
-    
-    if (db){;
+    if (!db) throw new Error("MongoDB 未连接，稍后重试");
     // MongoDB 插入日志
     await db.collection("user_inputs").insertOne({
       queryText,
       intentName,
-      deepseekReply: reply,
       timestamp: new Date()
     });
+
+    // 回复逻辑（保留你的原代码）
+    let reply = "默认回复。";
+
+    // 判断 intent
+    if (intentName === "start.learning") {
+      reply = "学习即将开始，加油！";
+    } else if (intentName === "ask.help") {
+      reply = "请问你需要什么帮助？";
     } else {
-      console.warn("⚠️ MongoDB 未连接，跳过日志记录。");
+      reply = `你好，你说的是：“${queryText}”`;
     }
-    
-    // Step 3: 返回 AI 回复给 Dialogflow
+  
     res.json({ fulfillmentText: reply });
   } catch (error) {
     console.error("❌ Webhook Error:", error);
@@ -77,6 +65,8 @@ app.post("/webhook", async (req, res) => {
     });
   }
 });
+
+
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
 });
