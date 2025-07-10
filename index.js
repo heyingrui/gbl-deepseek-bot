@@ -1,3 +1,4 @@
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
@@ -11,8 +12,6 @@ const fetch = require("node-fetch");
 
 async function callDeepSeek(queryText, intentName) {
   try{
-    // 回复逻辑（保留你的原代码）
-    let reply = "默认回复。";
      // 判断 intent
     if (intentName === "start.learning") {
       reply = "学习即将开始，加油！";
@@ -37,7 +36,7 @@ async function callDeepSeek(queryText, intentName) {
     });
 
     const data = await apiResponse.json();
-    reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
+    const reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。";
     }
     return reply;
 
