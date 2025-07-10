@@ -49,7 +49,7 @@ app.post("/webhook", async (req, res) => {
         })
       });
       const data = await apiResponse.json();
-      reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。";
+      reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。。。。";
     }
   
     res.json({ fulfillmentText: reply });
