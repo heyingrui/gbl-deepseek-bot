@@ -33,6 +33,7 @@ app.post("/webhook", async (req, res) => {
   console.log("📌 Intent displayName:", intentName);
 
   try {
+    if (!db) throw new Error("MongoDB 未连接，稍后重试");
     // MongoDB 插入日志
     await db.collection("user_inputs").insertOne({
       queryText,
