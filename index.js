@@ -31,7 +31,24 @@ app.post("/webhook", async (req, res) => {
     } else if (intentName === "ask.help") {
       reply = "请问你需要什么帮助？";
     } else {
-      reply = `你好，你说的是：“${queryText}”`;
+      // reply = `你好，你说的是：“${queryText}”`;
+      //请求DeepSeek API 获取回复
+      const apiResponse = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            { role: "system", content: "你是一个编程助教，擅长解释编程知识，语言简洁。" },
+            { role: "user", content: queryText }
+          ]
+        })
+      });
+      const data = await apiResponse.json();
+      reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。";
     }
   
     res.json({ fulfillmentText: reply });
