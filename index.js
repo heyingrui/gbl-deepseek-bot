@@ -11,11 +11,10 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.post("/webhook", async (req, res) => {
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
-
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  
   console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
   console.log("🎯 Extracted queryText:", queryText);
   console.log("🤖 Received queryText:", queryText);
