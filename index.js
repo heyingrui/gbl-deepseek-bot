@@ -7,6 +7,10 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+if (!DEEPSEEK_API_KEY) {
+  console.error("❌ DeepSeek API Key 未设置，请检查 .env 文件");
+}
 
 app.use(bodyParser.json());
 
@@ -29,39 +33,31 @@ app.post("/webhook", async (req, res) => {
     let reply = `你好，你说的是：“${queryText}”`;
 
     // 如果启用 DeepSeek，只要不属于预设 intent 就调用
-    if (!["start.learning", "ask.help"].includes(intentName)) {
-      const deepseekRes = await fetch(process.env.DEEPSEEK_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat", // 可选：根据你的模型命名
-          messages: [
-            { role: "system", content: "你是一个编程教学助理，请用简洁易懂的方式回答。" },
-            { role: "user", content: queryText },
-          ],
-        }),
-      });
+  const response = await fetch("https://api.deepseek.com/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: "deepseek-chat",
+      messages: [
+        { role: "system", content: "你是一个编程助教，擅长解释编程知识，语言简洁。" },
+        { role: "user", content: queryText }
+      ]
+    })
+  });
 
-      const data = await deepseekRes.json();
-      reply = data.choices?.[0]?.message?.content || reply;
-    } else if (intentName === "start.learning") {
-      reply = "学习即将开始，加油！";
-    } else if (intentName === "ask.help") {
-      reply = "请问你需要什么帮助？";
-    }
-      
-    res.json({ fulfillmentText: reply });
-  } catch (error) {
-    console.error("❌ DeepSeek Error:", err.message);
-    res.json({
-      fulfillmentText: "AI 无响应，请稍后重试。",
-    });
-  }
-});
+  const data = await response.json();
+  const reply = data.choices?.[0]?.message?.content || "AI 无响应，请稍后重试。";
 
+  res.json({ fulfillmentText: reply });
+} catch (error) {
+  console.error("❌ DeepSeek 调用失败:", error.stack);
+  res.status(500).json({
+    fulfillmentText: "AI 无响应，请稍后重试。",
+  });
+}
 
 app.listen(port, () => {
   console.log(`✅ Webhook server is running on port ${port}`);
