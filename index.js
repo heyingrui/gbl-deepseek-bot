@@ -9,6 +9,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const db = admin.firestore();
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
