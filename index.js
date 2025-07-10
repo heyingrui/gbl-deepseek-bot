@@ -27,8 +27,7 @@ app.use(bodyParser.json());
 
 app.post("/webhook", async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  
-  //const queryText = req.body.queryResult?.queryText || "";
+
   const userQuery = req.body.queryResult.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
@@ -48,7 +47,6 @@ app.post("/webhook", async (req, res) => {
   });  
 
   const result = await apiResponse.json();
-  const reply = result.choices?.[0]?.message?.content || "抱歉，我现在无法回答这个问题。";
 
   console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
   console.log("🎯 Extracted queryText:", queryText);
@@ -61,6 +59,7 @@ app.post("/webhook", async (req, res) => {
     await db.collection("user_inputs").insertOne({
       queryText,
       intentName,
+      deepseekReply: reply,
       timestamp: new Date()
     });
 
