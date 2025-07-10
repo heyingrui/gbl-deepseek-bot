@@ -34,8 +34,8 @@ app.post("/webhook", async (req, res) => {
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
   console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
-  // console.log("🎯 Extracted queryText:", queryText);
-  // console.log("🤖 Received queryText:", queryText);
+  console.log("🎯 Extracted queryText:", queryText);
+  console.log("🤖 Received queryText:", queryText);
 
   try {
     const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
