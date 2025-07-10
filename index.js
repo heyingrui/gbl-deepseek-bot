@@ -31,6 +31,8 @@ app.post("/webhook", async (req, res) => {
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
+  console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
+  console.log("🎯 Extracted queryText:", queryText);
   console.log("🤖 Received queryText:", queryText);
   console.log("📌 Intent displayName:", intentName);
 
