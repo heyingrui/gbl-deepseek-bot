@@ -15,29 +15,47 @@ app.post("/webhook", async (req, res) => {
   
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
-
-  console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
-  console.log("🎯 Extracted queryText:", queryText);
-  console.log("🤖 Received queryText:", queryText);
-  console.log("📌 Intent displayName:", intentName);
+  console.log("🎯 queryText:", queryText);
+  console.log("📌 intentName:", intentName);
+  
+  // console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
+  // console.log("🎯 Extracted queryText:", queryText);
+  // console.log("🤖 Received queryText:", queryText);
+  // console.log("📌 Intent displayName:", intentName);
 
   try {
 
     // 回复逻辑（保留你的原代码）
-    let reply = "默认回复。";
+    let reply = `你好，你说的是：“${queryText}”`;
 
-    // 判断 intent
-    if (intentName === "start.learning") {
+    // 如果启用 DeepSeek，只要不属于预设 intent 就调用
+    if (!["start.learning", "ask.help"].includes(intentName)) {
+      const deepseekRes = await fetch(process.env.DEEPSEEK_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat", // 可选：根据你的模型命名
+          messages: [
+            { role: "system", content: "你是一个编程教学助理，请用简洁易懂的方式回答。" },
+            { role: "user", content: queryText },
+          ],
+        }),
+      });
+
+      const data = await deepseekRes.json();
+      reply = data.choices?.[0]?.message?.content || reply;
+    } else if (intentName === "start.learning") {
       reply = "学习即将开始，加油！";
     } else if (intentName === "ask.help") {
       reply = "请问你需要什么帮助？";
-    } else {
-      reply = `你好，你说的是：“${queryText}”`;
     }
-  
+      
     res.json({ fulfillmentText: reply });
   } catch (error) {
-    console.error("❌ Webhook Error:", error);
+    console.error("❌ DeepSeek Error:", err.message);
     res.json({
       fulfillmentText: "AI 无响应，请稍后重试。",
     });
