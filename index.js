@@ -38,8 +38,14 @@ app.post("/webhook", async (req, res) => {
       reply = `你好，你说的是：“${queryText}”`;
     }
 
-      // ✅ 写入 Firestore
-      await db.collection("chat_logs").add({
+     db.collection("test_collection")
+      .add({ test: "ok", timestamp: new Date() })
+      .then(() => {
+        console.log("✅ Firestore connected and wrote data.");
+    })
+    
+    // ✅ 写入 Firestore
+    await db.collection("chat_logs").add({
       queryText,
       intentName,
       timestamp: new Date(),
