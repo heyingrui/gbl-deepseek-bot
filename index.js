@@ -1,4 +1,3 @@
-res.setHeader('Content-Type', 'application/json; charset=utf-8');
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
@@ -27,6 +26,8 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 app.use(bodyParser.json());
 
 app.post("/webhook", async (req, res) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
