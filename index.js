@@ -31,8 +31,6 @@ app.post("/webhook", async (req, res) => {
   const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
-
-
   const result = await apiResponse.json();
 
   // console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
@@ -42,19 +40,21 @@ app.post("/webhook", async (req, res) => {
 
   try {
     const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "deepseek-chat", // 或其他你使用的模型名
-      messages: [
-        { role: "system", content: "你是一个编程教学助手，请用简洁中文回答。" },
-        { role: "user", content: userQuery }
-      ]
-    })
-  });  
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat", // 或其他你使用的模型名
+        messages: [
+          { role: "system", content: "你是一个编程教学助手，请用简洁中文回答。" },
+          { role: "user", content: userQuery }
+        ]
+      })
+    });  
+
+    
     if (!db) throw new Error("MongoDB 未连接，稍后重试");
     // MongoDB 插入日志
     await db.collection("user_inputs").insertOne({
