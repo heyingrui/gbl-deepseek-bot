@@ -1,12 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
+const admin = require("firebase-admin");
 const fetch = require("node-fetch"); // ✅ 修复 fetch 报错
+const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+admin.initializeApp({
+  credential: admin.credential.cert(firebaseConfig),
+});
 
 app.use(bodyParser.json());
 
