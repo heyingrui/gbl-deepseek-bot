@@ -28,10 +28,20 @@ app.use(bodyParser.json());
 app.post("/webhook", async (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-  const userQuery = req.body.queryResult.queryText || "";
+  const queryText = req.body.queryResult?.queryText || "";
   const intentName = req.body.queryResult?.intent?.displayName || "";
 
-  const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+
+
+  const result = await apiResponse.json();
+
+  // console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
+  // console.log("🎯 Extracted queryText:", queryText);
+  // console.log("🤖 Received queryText:", queryText);
+  // console.log("📌 Intent displayName:", intentName);
+
+  try {
+    const apiResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
@@ -45,15 +55,6 @@ app.post("/webhook", async (req, res) => {
       ]
     })
   });  
-
-  const result = await apiResponse.json();
-
-  console.log("🌐 Raw body received:", JSON.stringify(req.body, null, 2));
-  console.log("🎯 Extracted queryText:", queryText);
-  console.log("🤖 Received queryText:", queryText);
-  console.log("📌 Intent displayName:", intentName);
-
-  try {
     if (!db) throw new Error("MongoDB 未连接，稍后重试");
     // MongoDB 插入日志
     await db.collection("user_inputs").insertOne({
